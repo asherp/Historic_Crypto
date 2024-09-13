@@ -202,4 +202,4 @@ class HistoricalData(object):
             data.set_index("time", drop=True, inplace=True)
             data.sort_index(ascending=True, inplace=True)
             data.drop_duplicates(subset=None, keep='first', inplace=True)
-            return data
+            return data.astype(float)

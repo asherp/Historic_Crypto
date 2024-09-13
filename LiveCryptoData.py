@@ -91,5 +91,5 @@ class LiveCryptoData(object):
             sys.exit()
 
 
-new = LiveCryptoData('BTC-USD').return_data()
-print(new)
+# new = LiveCryptoData('BTC-USD').return_data()
+# print(new)
