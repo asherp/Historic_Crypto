@@ -132,7 +132,8 @@ class HistoricalData(object):
             start_unix = int(start.timestamp())
             end_unix = int(end.timestamp())
             url = f"https://api.coinbase.com/api/v3/brokerage/market/products/{self.ticker}/candles?start={start_unix}&end={end_unix}&granularity={GRANULARITIES[self.granularity]}&limit={request_volume}"
-
+            if self.verbose:
+                print(f'Get request: {url}')
             response = requests.get(url)
             if response.status_code in [200, 201, 202, 203, 204]:
                 if self.verbose:
@@ -140,7 +141,9 @@ class HistoricalData(object):
                 data = response.json()['candles']
                 data = pd.DataFrame(data)
                 data.columns = ["time", "low", "high", "open", "close", "volume"]
-                data["time"] = pd.to_datetime(data["time"], unit='s')
+                # the api unix timestamps are shifted to the end of the index, use our computed ones
+                # data["time"] = pd.to_datetime(data["time"], unit='s')
+                data["time"] = times
                 data = data[data['time'].between(start, end)]
                 data.set_index("time", drop=True, inplace=True)
                 data.sort_index(ascending=True, inplace=True)
